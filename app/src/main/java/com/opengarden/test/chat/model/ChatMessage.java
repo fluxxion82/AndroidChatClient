@@ -7,11 +7,11 @@ import com.opengarden.test.chat.utils.Utils;
  */
 public class ChatMessage {
     public static final int MESSAGE = 0, LOGOUT = 1, LOGIN = 2;
-    private int mID;
-    private int mType;
-    private String mMessage;
-    private String mUsername;
-    private long mDate;
+    private int id;
+    private int type;
+    private String message;
+    private String username;
+    private long date;
 
     //Empty Constructor
     public ChatMessage() {
@@ -19,67 +19,67 @@ public class ChatMessage {
     }
 
     public ChatMessage(int id, String username, int type, String message, long date) {
-        mID = id;
-        mUsername = username;
-        mType = type;
-        mDate = date;
-        mMessage = message;
+        this.id = id;
+        this.username = username;
+        this.type = type;
+        this.date = date;
+        this.message = message;
     }
 
     public int getID() {
-        return mID;
+        return id;
     }
 
     public void setID(int id) {
-        mID = id;
+        this.id = id;
     }
 
     public int getType() {
-        return mType;
+        return type;
     }
 
     public void setType(int type) {
-        mType = type;
+        this.type = type;
     }
 
     public String getMessage() {
-        return mMessage;
+        return message;
     }
 
     public void setMessage(String message) {
-        mMessage = message;
+        this.message = message;
     }
 
     public String getUsername() {
-        return mUsername;
+        return username;
     }
 
     public void setUsername(String username) {
-        mUsername = username;
+        this.username = username;
     }
 
     public long getDate() {
-        return mDate;
+        return date;
     }
 
     public void setDate(long date) {
-        mDate = date;
+        this.date = date;
     }
 
     @Override
     public String toString() {
         String msg = "";
-        switch(mType){
+        switch(type){
             case ChatMessage.LOGIN:
-                msg = mMessage = mUsername + " just joined" + "\n";
+                msg = message = username + " just joined" + "\n";
                 break;
             case ChatMessage.LOGOUT:
                 //msg = mMessage  + "\n";
-                msg = mMessage = mUsername + " has logged out." + "\n";
+                msg = message = username + " has logged out." + "\n";
                 break;
             case ChatMessage.MESSAGE:
-                String time = Utils.formatDateTimeForDisplay(mDate);
-                msg = time + " " + mUsername + ": " + mMessage + "\n";
+                String time = Utils.formatDateTimeForDisplay(date);
+                msg = time + " " + username + ": " + message + "\n";
 
                 break;
         }
