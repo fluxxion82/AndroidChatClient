@@ -2,7 +2,6 @@ package com.opengarden.test.chat.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.widget.EditText;
 
 import com.opengarden.test.chat.R;
 import com.opengarden.test.chat.utils.Settings;
+
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Created by salbury on 8/9/15.

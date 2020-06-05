@@ -1,15 +1,16 @@
 package com.opengarden.test.chat.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.opengarden.test.chat.R;
 import com.opengarden.test.chat.fragment.ChatClientFragment;
 import com.opengarden.test.chat.fragment.EnterSettingsFragment;
 import com.opengarden.test.chat.utils.Settings;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Created by salbury on 8/9/15.

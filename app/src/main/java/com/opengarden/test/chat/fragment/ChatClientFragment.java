@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -35,6 +31,8 @@ import com.opengarden.test.chat.database.ChatDatabaseHelper;
 import com.opengarden.test.chat.model.ChatMessage;
 import com.opengarden.test.chat.utils.Utils;
 import com.opengarden.test.chat.utils.Settings;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by salbury on 8/9/15.
@@ -55,7 +53,7 @@ public class ChatClientFragment extends Fragment implements View.OnClickListener
     private Receiver mReceiver;
 
     //default IP address and port of the chat server
-    private String CHAT_SERVER_IP = "192.168.1.4";
+    private String CHAT_SERVER_IP = "10.0.0.63";
     private String USERNAME = "androidClient";
     private int CHAT_SERVER_PORT = 4444;
 
