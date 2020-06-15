@@ -1,0 +1,36 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="bottom_menu_icon_size">32.0dip</dimen>
+    <dimen name="edit_turn_button_size">56.0dip</dimen>
+
+<!--    <dimen name="action_bar_avatar_max_size">32dp</dimen>-->
+
+    <dimen name="message_image_max_width">300dp</dimen>
+    <dimen name="message_image_max_height">300dp</dimen>
+    <dimen name="message_icon_max_width">48dp</dimen>
+    <dimen name="message_icon_max_height">48dp</dimen>
+
+    <dimen name="thread_avatar_max_width">48dp</dimen>
+    <dimen name="thread_avatar_max_height">48dp</dimen>
+
+    <dimen name="global_edge_size">24dp</dimen>
+    <dimen name="shadow_adjusted_edge_size">16dp</dimen>
+
+    <dimen name="spacing_hard_rounded_button">50dp</dimen>
+
+    <!-- List Row -->
+    <dimen name="default_card_elevation">15dp</dimen>
+    <dimen name="list_item_button_size">28dp</dimen>
+    <dimen name="list_item_small_height">56dp</dimen>
+    <dimen name="list_item_image_elevation">8dp</dimen>
+    <dimen name="list_item_height">96dp</dimen>
+    <dimen name="list_item_text_container_height">58dp</dimen>
+    <dimen name="list_card_radius">0dp</dimen>
+    <dimen name="list_item_image_size">56dp</dimen>
+    <dimen name="list_header_image_size">76dp</dimen>
+    <dimen name="list_item_image_circular_card_radius">28dp</dimen>
+    <dimen name="group_heading_vertical_padding">5dp</dimen>
+    <dimen name="list_item_separation_spacing">10dp</dimen>
+    <dimen name="list_seperator_height">1dp</dimen>
+</resources>

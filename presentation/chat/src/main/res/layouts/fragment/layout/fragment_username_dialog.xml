@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="model"
+            type="ai.sterling.kchat.android.ui.settings.SettingsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/enter_username"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="center" android:orientation="vertical"  >
+
+        <TextView
+            android:id="@+id/enter_info" android:text="@string/enter_info"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:text="@={model.username}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/et_username" android:hint="@string/username_hint" android:text="@{model.username}"-->
+<!--            android:layout_width="match_parent"  android:layout_height="wrap_content"-->
+<!--            android:inputType="text" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editServerIpLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/server_address_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:text="@={model.serverAddress}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/et_server_ip" android:hint="@string/server_address_hint" android:text="@{model.serverAddress}"-->
+<!--            android:layout_width="match_parent"  android:layout_height="wrap_content" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editServerPortLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/server_address_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLines="1"
+                android:text="@{model.serverPort.toString()}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/et_server_port" android:hint="@string/server_port_hint" android:text="@{model.serverPort.toString()}"-->
+<!--            android:layout_width="match_parent" android:inputType="number" android:layout_height="wrap_content" />-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_finish"
+            android:onClick="@{() -> model.finishClicked()}"
+            android:text="@string/finish"/>
+
+    </LinearLayout>
+
+</layout>

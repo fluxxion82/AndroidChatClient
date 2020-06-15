@@ -1,0 +1,6 @@
+apply plugin: 'chat-lib.android'
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':logger')
+}

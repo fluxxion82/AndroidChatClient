@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@id/enter_settings_fragment">
+
+    <fragment
+            android:id="@+id/chat_fragment"
+            android:name="ai.sterling.kchat.android.ui.chat.ChatFragment"
+            android:label="ChatFragment"
+            tools:layout="@layout/fragment_chat">
+    </fragment>
+
+    <dialog
+        android:id="@+id/enter_settings_fragment"
+        android:name="ai.sterling.kchat.android.ui.settings.EnterSettingsFragment"
+        tools:layout="@layout/fragment_username_dialog" >
+        <action
+            android:id="@+id/action_my_dialog_to_chat_fragment"
+            app:destination="@id/chat_fragment" />
+    </dialog>
+
+</navigation>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--language=SQLite-->
+    <string name="create_table_user" translatable="false">
+        CREATE TABLE IF NOT EXISTS User (
+            _id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id         LONG DEFAULT 0,
+            first_name      TEXT,
+            birthdate       TEXT DEFAULT \"1981-5-5\",
+            height_in_cm    LONG,
+            weight_in_kg    LONG,
+            display_units   TEXT DEFAULT \"metric\",
+            sex             TEXT,
+            dev_consent     INTEGER,
+            support_consent INTEGER,
+            email           TEXT NOT NULL,
+            created_at      LONG,
+            app_version     TEXT,
+            os_version      TEXT,
+            device_type     TEXT,
+            timezone        TIMEZONE,
+            apns_token      TEXT,
+            fcm_token        TEXT,
+        UNIQUE(user_id)
+        );
+    </string>
+
+    <!--language=SQLite-->
+    <string name="alter_table_user_temp" translatable="false">
+        ALTER TABLE
+            User
+        RENAME TO
+            TempUser;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="drop_table_user_temp" translatable="false">
+        DROP TABLE IF EXISTS TempUser;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="drop_table_user" translatable="false">
+        DROP TABLE IF EXISTS User;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="update_table_user_v20" translatable="false">
+        INSERT OR IGNORE INTO
+            User (
+                user_id, first_name, birthdate, height_in_cm, weight_in_kg, display_units, sex, dev_consent,
+                support_consent, email, created_at, app_version, os_version, device_type, timezone, apns_token
+                    )
+        SELECT
+            user_id, first_name, birthdate, height_in_cm, weight_in_kg, display_units, sex, dev_consent,
+            support_consent, email, created_at, app_version, os_version, device_type, timezone, apns_token
+        FROM
+            TempUser;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_user" translatable="false">
+        SELECT
+            *
+        FROM User;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="create_table_device" translatable="false">
+        CREATE TABLE IF NOT EXISTS Device (
+            _id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+            pack_id             INTEGER,
+            device_config_id    INTEGER,
+            device_name         TEXT NOT NULL,
+            device_serial       TEXT NOT NULL,
+            device_address      TEXT,
+            firmware_version    TEXT,
+            clothing_type       TEXT NOT NULL DEFAULT \"\",
+            color               TEXT DEFAULT \'ffffffff\',
+            bootloader_rev      INTEGER,
+            hardware_rev        INTEGER,
+            is_starling         INTEGER,
+            is_connected        INTEGER,
+            last_connect        LONG,
+            battery_level       INTEGER,
+            battery_health      INTEGER DEFAULT 4,
+            needs_replacement   INTEGER,
+        UNIQUE(device_name, device_serial),
+        UNIQUE(device_serial)
+        );
+    </string>
+
+    <!--language=SQLite-->
+    <string name="update_table_device_v17" translatable="false">
+        INSERT OR IGNORE INTO
+            Device (
+                pack_id, device_config_id, device_name, device_serial, device_address, firmware_version, bootloader_rev,
+                hardware_rev, is_starling, is_connected, last_connect, battery_level
+                    )
+        SELECT
+            pack_id, device_config_id, device_name, device_serial, device_address, firmware_version, bootloader_rev,
+            hardware_rev, is_starling, is_connected, last_connect, battery_level
+        FROM
+            TempDevice;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="update_table_device_v18" translatable="false">
+        UPDATE
+            Device
+        SET
+            device_serial = UPPER(device_serial);
+    </string>
+
+    <!--language=SQLite-->
+    <string name="update_table_device_v19" translatable="false">
+        INSERT OR IGNORE INTO
+            Device (
+                pack_id, device_config_id, device_name, device_serial, device_address, clothing_type, color,
+                firmware_version, bootloader_rev, hardware_rev, is_starling, is_connected, last_connect, battery_level
+                    )
+        SELECT
+            pack_id, device_config_id, device_name, device_serial, device_address, clothing_type, color,
+            firmware_version, bootloader_rev, hardware_rev, is_starling, is_connected, last_connect, battery_level
+        FROM
+            TempDevice;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="alter_table_device_temp" translatable="false">
+        ALTER TABLE
+            Device
+        RENAME TO
+            TempDevice;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="drop_table_device_temp" translatable="false">
+        DROP TABLE IF EXISTS TempDevice;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="drop_table_device" translatable="false">
+        DROP TABLE IF EXISTS Device;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_all_devices" translatable="false">
+        SELECT
+            *
+        FROM
+            Device
+        ORDER BY
+            last_connect
+        DESC;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_device_by_serial" translatable="false">
+        SELECT
+            *
+        FROM
+            Device
+        WHERE
+            device_serial = ?;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_device_by_address" translatable="false">
+        SELECT
+            *
+        FROM
+            Device
+        WHERE
+            device_address = ?;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_device_by_pack_id" translatable="false">
+        SELECT
+            *
+        FROM
+            Device
+        WHERE
+            pack_id = ?
+        ORDER BY
+            last_connect
+        DESC;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="create_table_device_config" translatable="false">
+        CREATE TABLE IF NOT EXISTS DeviceConfig (
+            _id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            config_id       INTEGER,
+            device_serial   TEXT NOT NULL,
+            json_blob       TEXT,
+        UNIQUE(device_serial)
+        );
+    </string>
+
+    <!--language=SQLite-->
+    <string name="drop_table_device_config" translatable="false">
+        DROP TABLE IF EXISTS Device;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_all_device_configs" translatable="false">
+        SELECT
+            *
+        FROM
+            DeviceConfig;
+    </string>
+
+    <!--language=SQLite-->
+    <string name="select_device_config_by_serial" translatable="false">
+        SELECT
+            *
+        FROM
+            DeviceConfig
+        WHERE
+            device_serial = ?;
+    </string>
+
+</resources>
