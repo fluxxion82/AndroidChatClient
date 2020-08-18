@@ -6,8 +6,10 @@ include ':data:api',
         ':data:platform'
 include ':presentation:chat'
 
-include ':multicore', ':logger'
-include ':domain',":kinject"
+include ':multicore',
+        ':logger'
+include ':domain',
+        ':kinject'
 project(":domain").projectDir = file("../KChatShared/domain")
 project(":kinject").projectDir = file("../KChatShared/kinject")
 project(":multicore").projectDir = file("../KChatShared/multicore")

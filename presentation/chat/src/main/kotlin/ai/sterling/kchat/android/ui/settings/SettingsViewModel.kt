@@ -5,13 +5,14 @@ import ai.sterling.kchat.android.ui.base.Event
 import ai.sterling.kchat.android.ui.base.toEvent
 import ai.sterling.kchat.android.ui.settings.models.ServerInfoNavigation
 import ai.sterling.kchat.domain.base.invoke
+import ai.sterling.kchat.domain.initialization.models.UserState
 import ai.sterling.kchat.domain.settings.GetServerInfo
 import ai.sterling.kchat.domain.settings.UpdateServerInfo
 import ai.sterling.kchat.domain.settings.models.ServerInfo
 import ai.sterling.kchat.domain.user.LoginUser
 import ai.sterling.logger.KLogger
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,21 +24,21 @@ class SettingsViewModel @Inject constructor(
 
     val username = MutableLiveData<String?>()
     val serverAddress = MutableLiveData<String?>()
-    val serverPort = MutableLiveData<Int?>()
+    val serverPort = MutableLiveData<String?>()
 
     val navigation = MutableLiveData<Event<ServerInfoNavigation>?>()
 
     init {
         launch {
-            getServerInfo().collect {
-                username.value = it.username
-                serverAddress.value = it.serverIP
-                serverPort.value = it.serverPort
-            }
+            val serverInfo = getServerInfo().single()
 
-            if (!username.value.isNullOrEmpty()) {
-                navigation.value = ServerInfoNavigation.UPDATE_SUCCEEDED.toEvent()
-            }
+            username.value = serverInfo.username
+            serverAddress.value = serverInfo.serverIP
+            serverPort.value = serverInfo.serverPort.toString()
+
+//            if (!username.value.isNullOrEmpty()) {
+//                navigation.value = ServerInfoNavigation.UPDATE_SUCCEEDED.toEvent()
+//            }
         }
     }
 
@@ -46,13 +47,15 @@ class SettingsViewModel @Inject constructor(
             KLogger.d {
                 "username is ${username.value}"
             }
-            val serverInfo = ServerInfo(username.value!!, serverAddress.value!!, serverPort.value!!)
+            val serverInfo = ServerInfo(username.value!!, serverAddress.value!!, serverPort.value!!.toInt())
             launch {
                 updateServerInfo(serverInfo)
             }
             launch {
-                loginUser(LoginUser.LoginData(username.value!!))
-                navigation.value = ServerInfoNavigation.UPDATE_SUCCEEDED.toEvent()
+                val loginState = loginUser(LoginUser.LoginData(username.value!!))
+                if (loginState == UserState.LoggedIn) {
+                    navigation.value = ServerInfoNavigation.UPDATE_SUCCEEDED.toEvent()
+                }
             }
         } else {
             KLogger.d {

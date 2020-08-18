@@ -5,15 +5,8 @@ import ai.sterling.kchat.android.ui.base.BaseDialogFragment
 import ai.sterling.kchat.android.ui.settings.models.ServerInfoNavigation
 import ai.sterling.kchat.databinding.FragmentUsernameDialogBinding
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnFocusChangeListener
-import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
-import androidx.lifecycle.observe
-import androidx.navigation.NavDirections
+import androidx.lifecycle.Observer
 
 class EnterSettingsFragment : BaseDialogFragment<FragmentUsernameDialogBinding, SettingsViewModel>() {
     override val viewModelClass = SettingsViewModel::class

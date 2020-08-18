@@ -2,6 +2,7 @@ package ai.sterling.kchat.android.remote.repositories
 
 import ai.sterling.kchat.android.api.KChatApiClient
 import ai.sterling.kchat.domain.base.CoroutinesContextFacade
+import ai.sterling.kchat.domain.base.model.Outcome
 import ai.sterling.kchat.domain.user.LoginUser
 import ai.sterling.kchat.domain.user.SignUpUser
 import ai.sterling.kchat.domain.user.models.AppUser
@@ -24,12 +25,27 @@ class RemoteUserRepository @Inject constructor(
     private val contextFacade: CoroutinesContextFacade
 ): UserRepository {
 
-    override fun login(param: LoginUser.LoginData): Flow<AppUser.LoggedIn> = channelFlow {
-        userStorage.insertUser(param)
-        send(userStorage.getUser(param.username)!!)
+    override fun login(param: LoginUser.LoginData): Flow<AppUser> = channelFlow {
+        apiClient.connect().collect { outcome ->
+            when (outcome) {
+                is Outcome.Success -> {
+                    userStorage.insertUser(param)
+                    send(userStorage.getUser(param.username)!!)
+                }
+                is Outcome.Error -> {
+                    when (outcome.cause) {
+                        else -> {
+                            disconnect()
+                            send(AppUser.Anonymous)
+                        }
+                    }
+                }
+            }
+        }
+
     }.flowOn(contextFacade.io)
 
-    override fun signup(param: SignUpUser.SignUpnData): Flow<AppUser.LoggedIn> = channelFlow {
+    override fun signup(param: SignUpUser.SignUpnData): Flow<AppUser> = channelFlow {
         send(userStorage.getUser(param.username)!!)
     }.flowOn(contextFacade.io)
 

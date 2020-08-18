@@ -37,7 +37,7 @@ class ChatViewModel @Inject constructor(
     private val addChatMessage: AddChatMessage,
     private val getServerInfo: GetServerInfo
 ) : BaseViewModel() {
-    val messages = MutableLiveData<MutableList<ChatMessage>>()
+    val messages = MutableLiveData<MutableSet<ChatMessage>>()
     val reply = MutableLiveData<String>()
     lateinit var username: String
     lateinit var serverInfo: ServerInfo
@@ -60,7 +60,7 @@ class ChatViewModel @Inject constructor(
                 KLogger.d {
                     "get messages, on resume, size: ${it.size}"
                 }
-                messages.value = it.toMutableList()
+                messages.value = it.toMutableSet()
             }
         }
     }
@@ -82,7 +82,7 @@ class ChatViewModel @Inject constructor(
                         username,
                         ChatMessage.MESSAGE,
                         reply.value.toString(),
-                        DateTime.now().unixMillisLong
+                        DateTime.nowUnixLong()
                     )
                 )
 
@@ -92,7 +92,7 @@ class ChatViewModel @Inject constructor(
                     KLogger.d {
                         "get messages, reply clicked, size: ${it.size}"
                     }
-                    messages.value = it.toMutableList()
+                    messages.value = it.toMutableSet()
                     //messages.postValue(messages.value)
                 }
 

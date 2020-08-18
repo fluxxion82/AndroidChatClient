@@ -70,7 +70,7 @@ class RemoteChatMessageRepository @Inject constructor(
                     }
                     is Outcome.Error -> {
                         when (it.cause) {
-                            is Failure.NetworkConnection -> apiClient.connectToServer()
+                            is Failure.NetworkConnection -> apiClient.connect()
                             else -> {
 
                             }

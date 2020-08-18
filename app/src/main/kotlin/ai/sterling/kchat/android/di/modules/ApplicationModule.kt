@@ -1,18 +1,15 @@
 package ai.sterling.kchat.android.di.modules
 
-import android.app.Application
-import android.content.Context
-import dagger.Binds
-import dagger.multibindings.IntoSet
 import ai.sterling.kchat.android.MainApplication
 import ai.sterling.kchat.android.configuration.AndroidThreeTenConfigurator
 import ai.sterling.kchat.android.configuration.AppConfigurator
 import ai.sterling.kchat.android.configuration.LoggingInitializer
 import ai.sterling.kchat.domain.initialization.AppInitializer
-import ai.sterling.logger.Logger
-import ai.sterling.logger.android.AndroidLogger
+import android.app.Application
+import android.content.Context
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.multibindings.IntoSet
 
 @Module
 internal abstract class ApplicationModule {

@@ -38,7 +38,7 @@ class ChatMessageDao @Inject constructor(
                     COLUMN_MESSAGE + " TEXT NOT NULL," +
                     COLUMN_DATE + " TEXT," +
                     "FOREIGN KEY(" + COLUMN_USER_ID + ") REFERENCES " + AppUserDao.Table.TABLE_NAME + "(" + AppUserDao.Table.COLUMN_ID + ")" +
-                    "UNIQUE(" + COLUMN_ID + "," + COLUMN_USER_ID + ')'+ ");"
+                    "UNIQUE(" + COLUMN_USER_ID + "," + COLUMN_MESSAGE + "," + COLUMN_DATE + ')'+ ");"
 
             fun onCreate(database: SQLiteDatabase) {
                 database.execSQL(CREATE_TABLE)
@@ -133,6 +133,7 @@ class ChatMessageDao @Inject constructor(
                 userDao.insertUser(LoginUser.LoginData(message.username))
                 user = userDao.getUserIdFromUsername(message.username)
             }
+
             values.put(Table.COLUMN_USER_ID, user)
 
             if (message.type >= 0) {

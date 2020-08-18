@@ -11,6 +11,8 @@ abstract class BaseAndroidPlugin : BasePlugin() {
 
     override fun apply(project: Project) {
         project.plugins.apply("kotlin-android")
+        project.plugins.apply("kotlin-android-extensions")
+        project.plugins.apply("kotlin-kapt")
         super.apply(project)
 
         project.extensions.getByType(TestedExtension::class.java).apply {

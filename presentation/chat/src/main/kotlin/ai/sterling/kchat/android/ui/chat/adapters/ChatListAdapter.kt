@@ -24,17 +24,17 @@ internal class ChatListAdapter(
 
     init {
         viewModel.messages.observe(lifecycleOwner) {
-            DiffUtil.calculateDiff(ChatCallback(oldList, it.orEmpty())).dispatchUpdatesTo(this)
+            DiffUtil.calculateDiff(ChatCallback(oldList, it.orEmpty().toList())).dispatchUpdatesTo(this)
             oldList.addAll(it.orEmpty())
         }
     }
 
     override fun getItemId(position: Int) =
-        viewModel.messages.value.orEmpty()[position].id.hashCode().toLong()
+        viewModel.messages.value.orEmpty().toList()[position].id.hashCode().toLong()
 
 
     override fun getItemViewType(position: Int) =
-        when (viewModel.messages.value.orEmpty()[position].type) {
+        when (viewModel.messages.value.orEmpty().toList()[position].type) {
             ChatMessage.REPLY -> {
                 ITEM_TYPE_REPLY
             }
@@ -60,7 +60,7 @@ internal class ChatListAdapter(
         holder.binding.setVariable(
             BR.model,
             when (holder.itemViewType) {
-                ITEM_TYPE_NEUTRAL, ITEM_TYPE_REPLY, ITEM_TYPE_MESSAGE -> viewModel.messages.value?.get(position)
+                ITEM_TYPE_NEUTRAL, ITEM_TYPE_REPLY, ITEM_TYPE_MESSAGE -> viewModel.messages.value.orEmpty().toList()[position]
                 else -> throw IllegalArgumentException("Unsupported type")
             }
         )

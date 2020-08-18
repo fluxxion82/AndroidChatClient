@@ -1,9 +1,5 @@
 package ai.sterling.kchat.android.di
 
-import ai.sterling.kchat.android.remote.di.RemoteModule
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
 import ai.sterling.kchat.android.MainApplication
 import ai.sterling.kchat.android.api.di.ApiModule
 import ai.sterling.kchat.android.database.di.DatabaseModule
@@ -11,7 +7,12 @@ import ai.sterling.kchat.android.database.di.StorageModule
 import ai.sterling.kchat.android.di.modules.ApplicationModule
 import ai.sterling.kchat.android.di.modules.BuildConfigModule
 import ai.sterling.kchat.android.platform.di.PlatformModule
+import ai.sterling.kchat.android.remote.di.RemoteModule
 import ai.sterling.kchat.domain.di.DomainModule
+import ai.sterling.logger.android.di.AndroidLoggingModule
+import dagger.Component
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
@@ -20,6 +21,7 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         TestInjectors::class,
+        AndroidLoggingModule::class,
         DomainModule::class,
         RemoteModule::class,
         PlatformModule::class,
