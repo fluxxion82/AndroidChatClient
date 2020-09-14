@@ -9,13 +9,11 @@ import ai.sterling.kchat.domain.settings.models.ServerInfo
 import ai.sterling.kchat.domain.user.persistences.UserPreferences
 import ai.sterling.logger.KLogger
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.soywiz.klock.DateTime
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -34,7 +32,6 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 import java.net.UnknownHostException
-import java.util.Calendar
 import javax.inject.Inject
 
 

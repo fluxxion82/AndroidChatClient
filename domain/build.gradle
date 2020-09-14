@@ -1,0 +1,6 @@
+apply plugin: 'chat-lib.kotlin'
+
+dependencies {
+    api project(':logging:logger')
+    api "com.soywiz.korlibs.klock:klock:1.12.0"
+}

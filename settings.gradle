@@ -1,18 +1,12 @@
 include ':app'
-include ':androidlogger'
 include ':data:api',
         ':data:database',
         ':data:remote',
         ':data:platform'
+include ':domain'
+include 'logging:androidlogger',
+        'logging:logger'
 include ':presentation:chat'
-
-include ':multicore',
-        ':logger'
-include ':domain',
-        ':kinject'
-project(":domain").projectDir = file("../KChatShared/domain")
-project(":kinject").projectDir = file("../KChatShared/kinject")
-project(":multicore").projectDir = file("../KChatShared/multicore")
-project(":logger").projectDir = file("../KChatShared/logger")
+include ':lintchecks'
 
 rootProject.name = "KChatAndroid"

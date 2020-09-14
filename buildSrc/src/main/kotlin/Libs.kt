@@ -3,7 +3,8 @@ object Libs {
     private const val daggerVersion = "2.28.3"
     private const val coroutinesVersion = "1.3.7"
     private const val espressoVersion = "3.1.1"
-
+    private const val lintVersion = "26.5.0"
+    
     const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
     const val dagger = "com.google.dagger:dagger:$daggerVersion"
@@ -14,6 +15,9 @@ object Libs {
     const val javaxInject = "javax.inject:javax.inject:1"
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    const val lintApi = "com.android.tools.lint:lint-api:$lintVersion"
+    const val lintCheck = "com.android.tools.lint:lint-checks:$lintVersion"
+    const val lintTests = "com.android.tools.lint:lint-tests:$lintVersion"
 
     object Kapt {
         const val daggerCompiler = "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -21,10 +25,10 @@ object Libs {
     }
 
     object Tests {
-        const val junit = "junit:junit:4.12"
+        const val junit = "junit:junit:4.13"
         const val mockitoKotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-        const val mockito = "org.mockito:mockito-core:3.1.0"
-        const val assertJ = "org.assertj:assertj-core:3.13.2"
+        const val mockito = "org.mockito:mockito-core:3.3.3"
+        const val assertJ = "org.assertj:assertj-core:3.15.0"
         const val testingCore = "androidx.arch.core:core-testing:2.1.0"
         const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     }

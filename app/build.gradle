@@ -35,19 +35,20 @@ android {
 }
 
 dependencies {
-    implementation project(':androidlogger')
+    implementation project(':logging:androidlogger')
     implementation project(':data:api')
     implementation project(':data:database')
     implementation project(':data:platform')
     implementation project(':data:remote')
     implementation project(':domain')
-    implementation project(':logger')
+    implementation project(':logging:logger')
     implementation project(':presentation:chat')
 
     compileOnly 'com.google.code.gson:gson:2.8.6'
     compileOnly 'com.google.android.material:material:1.2.1'
     compileOnly 'androidx.navigation:navigation-fragment-ktx:2.3.0'
     compileOnly 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    compileOnly 'com.soywiz.korlibs.klock:klock:1.12.0'
 
     compileOnly 'androidx.appcompat:appcompat:1.2.0'
     compileOnly 'androidx.cardview:cardview:1.0.0'

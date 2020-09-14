@@ -1,0 +1,20 @@
+apply plugin: 'kotlin'
+
+jar {
+    manifest {
+        attributes "Lint-Registry-v2": "com.chess.IssuesRegistry"
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+}
+
+dependencies {
+    compileOnly Libs.kotlinStdLib
+    compileOnly Libs.lintApi
+    compileOnly Libs.lintCheck
+    testImplementation Libs.lintApi
+    testImplementation Libs.lintTests
+}

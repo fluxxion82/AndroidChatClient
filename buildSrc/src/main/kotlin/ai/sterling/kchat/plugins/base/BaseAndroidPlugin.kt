@@ -12,7 +12,6 @@ abstract class BaseAndroidPlugin : BasePlugin() {
     override fun apply(project: Project) {
         project.plugins.apply("kotlin-android")
         project.plugins.apply("kotlin-android-extensions")
-        project.plugins.apply("kotlin-kapt")
         super.apply(project)
 
         project.extensions.getByType(TestedExtension::class.java).apply {
@@ -40,6 +39,7 @@ abstract class BaseAndroidPlugin : BasePlugin() {
             add("kapt", Libs.Kapt.daggerAndroidCompiler)
             add("kaptAndroidTest", Libs.Kapt.daggerAndroidCompiler)
             add("testImplementation", Libs.Tests.testingCore)
+            add("lintChecks", project.rootProject.project("lintchecks"))
 
             add("androidTestImplementation", Libs.Tests.assertJ)
             add("androidTestImplementation", Libs.AndroidTests.testCore)

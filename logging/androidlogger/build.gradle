@@ -1,5 +1,5 @@
 apply plugin: 'chat-lib.android'
 
 dependencies {
-    implementation project(':logger')
+    implementation project(':logging:logger')
 }
