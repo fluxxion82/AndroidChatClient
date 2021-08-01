@@ -1,6 +1,5 @@
 package ai.sterling.kchat.plugins.base
 
-import Libs
 import com.android.build.gradle.TestedExtension
 import com.android.builder.model.LintOptions
 import org.gradle.api.JavaVersion
@@ -11,7 +10,6 @@ abstract class BaseAndroidPlugin : BasePlugin() {
 
     override fun apply(project: Project) {
         project.plugins.apply("kotlin-android")
-        project.plugins.apply("kotlin-android-extensions")
         project.plugins.apply("kotlin-kapt")
         super.apply(project)
 
@@ -34,24 +32,24 @@ abstract class BaseAndroidPlugin : BasePlugin() {
         }
 
         project.dependencies.apply {
-            add("implementation", Libs.coroutinesAndroid)
-            add("implementation", Libs.daggerAndroid)
-            add("implementation", Libs.daggerAndroidSupport)
-            add("kapt", Libs.Kapt.daggerAndroidCompiler)
-            add("kaptAndroidTest", Libs.Kapt.daggerAndroidCompiler)
-            add("testImplementation", Libs.Tests.testingCore)
+            add("implementation", "javax.annotation:javax.annotation-api:1.3.2")
+            add("implementation", "androidx.annotation:annotation:1.2.0")
+            add("implementation", "com.google.dagger:hilt-android:$daggerVersion")
+            add("kapt", "com.google.dagger:hilt-android-compiler:$daggerVersion")
 
-            add("androidTestImplementation", Libs.Tests.assertJ)
-            add("androidTestImplementation", Libs.AndroidTests.testCore)
-            add("androidTestImplementation", Libs.AndroidTests.testRunner)
-            add("androidTestImplementation", Libs.AndroidTests.testRules)
-
-            add("androidTestImplementation", Libs.AndroidTests.junit)
-
-            add("androidTestImplementation", Libs.AndroidTests.espressoCore)
-            add("androidTestImplementation", Libs.AndroidTests.espressoIntents)
-            add("androidTestImplementation", Libs.AndroidTests.mockito)
-            add("androidTestImplementation", Libs.AndroidTests.mockitoAndroid)
+            add("androidTestImplementation", "org.assertj:assertj-core:3.16.1")
+            add("androidTestImplementation", "androidx.arch.core:core-testing:2.1.0")
+            add("androidTestImplementation", "androidx.test:runner:1.3.0")
+            add("androidTestImplementation", "androidx.test:orchestrator:1.3.0")
+            add("androidTestImplementation", "androidx.test.uiautomator:uiautomator:2.2.0")
+            add("androidTestImplementation", "androidx.test:core:1.3.0")
+            add("androidTestImplementation", "androidx.test:rules:1.3.0")
+            add("androidTestImplementation", "androidx.test.ext:junit:1.1.2")
+            add("androidTestImplementation", "androidx.test.espresso:espresso-core:$espressoVersion")
+            add("androidTestImplementation", "androidx.test.espresso:espresso-intents:$espressoVersion")
+            add("androidTestImplementation", "androidx.test.espresso:espresso-web:$espressoVersion")
+            add("androidTestImplementation", "org.mockito:mockito-core:3.3.3")
+            add("androidTestImplementation", "org.mockito:mockito-android:3.3.3")
         }
     }
 
@@ -82,8 +80,11 @@ abstract class BaseAndroidPlugin : BasePlugin() {
     }
 
     companion object {
-        private const val COMPILE_SDK_VERSION = 29
+        private const val COMPILE_SDK_VERSION = 30
         private const val MIN_SDK_VERSION = 26
+
+        private const val daggerVersion = "2.37"
+        private const val espressoVersion = "3.1.1"
     }
 }
 

@@ -1,17 +1,14 @@
 package ai.sterling.kchat.android.platform.service
 
 import ai.sterling.kchat.domain.app.persistence.ForegroundEventPersistence
+import ai.sterling.kchat.domain.base.CoroutineScopeFacade
+import ai.sterling.kchat.domain.initialization.AppInitializer
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import ai.sterling.kchat.domain.base.CoroutineScopeFacade
-import ai.sterling.kchat.domain.initialization.AppInitializer
-import ai.sterling.kchat.domain.user.persistences.UserRepository
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@Singleton
 internal class ActivityProvider @Inject constructor(
     private val application: Application,
     private val coroutinesScopeFacade: CoroutineScopeFacade,
@@ -40,7 +37,7 @@ internal class ActivityProvider @Inject constructor(
 
             override fun onActivityDestroyed(activity: Activity) = Unit
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) = Unit
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
 
             override fun onActivityStopped(activity: Activity) = Unit
 

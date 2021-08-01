@@ -1,7 +1,7 @@
 object Libs {
-    private const val kotlinVersion = "1.4.10"
-    private const val daggerVersion = "2.28.3"
-    private const val coroutinesVersion = "1.3.7"
+    private const val kotlinVersion = "1.5.10"
+    private const val daggerVersion = "2.37"
+    private const val coroutinesVersion = "1.5.0"
     private const val espressoVersion = "3.1.1"
 
     const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"

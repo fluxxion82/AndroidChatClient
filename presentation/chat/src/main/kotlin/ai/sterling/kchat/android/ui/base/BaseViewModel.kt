@@ -16,7 +16,6 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel(parentJob: Job? = null) : ViewModel(), LifecycleObserver, CoroutineScope {
-
     protected val job = SupervisorJob(parentJob)
 
     override val coroutineContext: CoroutineContext
@@ -35,7 +34,7 @@ abstract class BaseViewModel(parentJob: Job? = null) : ViewModel(), LifecycleObs
                     liveData.value = it
                 }
             }.onFailure { exception ->
-                Log.e(BaseViewModel::class.java.simpleName, exception.message)
+                Log.e(BaseViewModel::class.java.simpleName, exception.message ?: "exception invoking usecase tolivedata")
             }
         }
 

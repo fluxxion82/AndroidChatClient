@@ -1,19 +1,18 @@
 package ai.sterling.kchat.android.platform.repositories
 
 import ai.sterling.kchat.android.platform.internal.int
-import ai.sterling.kchat.android.platform.internal.long
 import ai.sterling.kchat.android.platform.internal.string
 import ai.sterling.kchat.domain.base.CoroutinesContextFacade
 import ai.sterling.kchat.domain.settings.models.ServerInfo
-import ai.sterling.kchat.domain.user.models.AppUser
 import ai.sterling.kchat.domain.user.persistences.UserPreferences
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 internal class SharedUserPreferencesRepository @Inject constructor(
-    context: Context,
+    @ApplicationContext context: Context,
     private val coroutineContextFacade: CoroutinesContextFacade
 ) : SharePreferencesRepository(context, PREFS_NAME), UserPreferences {
 

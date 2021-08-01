@@ -1,8 +1,8 @@
 package ai.sterling.kchat.android.configuration
 
 import ai.sterling.kchat.domain.initialization.AppInitializer
-import ai.sterling.logger.KLogger
-import ai.sterling.logger.Logger
+import ai.sterling.logging.KLogger
+import ai.sterling.logging.Logger
 import javax.inject.Inject
 
 internal class LoggingInitializer @Inject constructor(

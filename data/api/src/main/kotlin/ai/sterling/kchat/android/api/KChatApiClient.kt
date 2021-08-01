@@ -7,21 +7,19 @@ import ai.sterling.kchat.domain.chat.model.ChatMessage
 import ai.sterling.kchat.domain.exception.Failure
 import ai.sterling.kchat.domain.settings.models.ServerInfo
 import ai.sterling.kchat.domain.user.persistences.UserPreferences
-import ai.sterling.logger.KLogger
+import ai.sterling.logging.KLogger
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import com.soywiz.klock.DateTime
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -34,9 +32,7 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 import java.net.UnknownHostException
-import java.util.Calendar
 import javax.inject.Inject
-
 
 class KChatApiClient @Inject constructor(
     private val userPreferences: UserPreferences,
@@ -96,7 +92,7 @@ class KChatApiClient @Inject constructor(
                                 serverInfo!!.username,
                                 ChatMessage.LOGIN,
                                 "",
-                                DateTime.nowUnixLong()
+                                Clock.System.now().toEpochMilliseconds()
                             )
 
                         webSocket.send(Gson().toJson(arrayListOf(msg)).toString())
@@ -176,7 +172,7 @@ class KChatApiClient @Inject constructor(
                             serverInfo!!.username,
                             ChatMessage.LOGIN,
                             "",
-                            DateTime.nowUnixLong()
+                            Clock.System.now().toEpochMilliseconds()
                         )
                     printWriter?.write(Gson().toJson(arrayListOf(msg)).toString() + "\n")
                     printWriter?.flush()
@@ -263,7 +259,7 @@ class KChatApiClient @Inject constructor(
                     serverInfo!!.username,
                     ChatMessage.LOGOUT,
                     "",
-                    DateTime.nowUnixLong()
+                    Clock.System.now().toEpochMilliseconds()
                 )
                 KLogger.d {
                     "loggggout"

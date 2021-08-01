@@ -5,7 +5,7 @@ import ai.sterling.kchat.domain.chat.model.ChatMessage
 import ai.sterling.kchat.domain.chat.persistence.ChatDao
 import ai.sterling.kchat.domain.user.LoginUser
 import ai.sterling.kchat.domain.user.persistences.UserDao
-import ai.sterling.logger.KLogger
+import ai.sterling.logging.KLogger
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase

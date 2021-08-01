@@ -2,12 +2,6 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable
-            name="model"
-            type="ai.sterling.kchat.domain.chat.model.ChatMessage" />
-    </data>
-
     <RelativeLayout
         style="@style/RowStyle"
         android:id="@+id/message_root_layout"
@@ -41,7 +35,6 @@
                     android:layout_height="wrap_content"
                     android:autoLink="all"
                     android:gravity="center_vertical"
-                    android:text="@{model.message}"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -6,20 +6,18 @@ import ai.sterling.kchat.domain.connectivity.ConnectionState
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkCapabilities
 import android.net.NetworkInfo
-import android.net.NetworkRequest
-import android.os.Build
-import javax.inject.Inject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 internal class AndroidConnectionMonitor @Inject constructor(
-    context: Context,
+    @ApplicationContext context: Context,
     private val contextFacade: CoroutineScopeFacade
 ) : ConnectionMonitor {
 

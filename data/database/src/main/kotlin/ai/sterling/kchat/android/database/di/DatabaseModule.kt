@@ -1,13 +1,17 @@
 package ai.sterling.kchat.android.database.di
 
+import ai.sterling.kchat.android.database.DatabaseManager
+import ai.sterling.kchat.android.database.KChatDatabaseHelper
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ai.sterling.kchat.android.database.DatabaseManager
-import ai.sterling.kchat.android.database.KChatDatabaseHelper
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module(includes = [StorageModule::class])
+@Module
+@InstallIn(SingletonComponent::class)
 class DatabaseModule {
 
     @Provides
@@ -19,6 +23,6 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    internal fun provideKChatDatabaseHelper(context: Context): KChatDatabaseHelper =
+    internal fun provideKChatDatabaseHelper(@ApplicationContext context: Context): KChatDatabaseHelper =
         KChatDatabaseHelper(context)
 }

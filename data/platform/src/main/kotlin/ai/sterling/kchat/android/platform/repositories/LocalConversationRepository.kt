@@ -8,6 +8,7 @@ import ai.sterling.kchat.domain.chat.repository.ConversationRepository
 import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
@@ -17,7 +18,7 @@ import java.io.InputStream
 import javax.inject.Inject
 
 class LocalConversationRepository @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val contextFacade: CoroutinesContextFacade
 ): ConversationRepository {
 

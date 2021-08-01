@@ -2,13 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="model"
-            type="ai.sterling.kchat.domain.chat.model.ChatMessage" />
-    </data>
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/image_message_bubble"
         style="@style/RowStyle"
@@ -23,7 +16,6 @@
             android:background="@drawable/button_rounded_white"
             android:gravity="center"
             android:padding="15dp"
-            android:text="@{model.message}"
             android:textAlignment="center"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"

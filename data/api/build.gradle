@@ -2,7 +2,8 @@ apply plugin: 'chat-lib.android'
 
 dependencies {
     implementation project(':domain')
-    implementation project(':logger')
-    implementation "com.google.code.gson:gson:2.8.6"
-    implementation "com.squareup.okhttp3:okhttp:4.3.0"
+    implementation project(':logging:logger')
+    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "com.squareup.okhttp3:okhttp:4.3.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
 }

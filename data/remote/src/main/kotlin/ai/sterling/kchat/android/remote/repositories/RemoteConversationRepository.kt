@@ -6,11 +6,12 @@ import ai.sterling.kchat.domain.chat.repository.ConversationRepository
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RemoteConversationRepository @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val contextFacade: CoroutinesContextFacade
     // private val apiClient: ApiClient
 ): ConversationRepository {

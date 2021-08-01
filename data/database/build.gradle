@@ -2,5 +2,6 @@ apply plugin: 'chat-lib.android'
 
 dependencies {
     implementation project(':domain')
-    implementation project(':logger')
+    implementation project(':logging:logger')
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
 }

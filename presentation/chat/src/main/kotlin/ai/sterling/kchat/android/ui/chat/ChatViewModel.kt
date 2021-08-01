@@ -7,7 +7,7 @@ import ai.sterling.kchat.domain.chat.GetChatMessages
 import ai.sterling.kchat.domain.chat.model.ChatMessage
 import ai.sterling.kchat.domain.settings.GetServerInfo
 import ai.sterling.kchat.domain.settings.models.ServerInfo
-import ai.sterling.logger.KLogger
+import ai.sterling.logging.KLogger
 import android.database.sqlite.SQLiteDatabase
 import android.os.AsyncTask
 import android.os.Build
@@ -15,13 +15,15 @@ import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.soywiz.klock.DateTime
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -32,6 +34,7 @@ import java.util.ArrayList
 import java.util.Calendar
 import javax.inject.Inject
 
+@HiltViewModel
 class ChatViewModel @Inject constructor(
     private val getChatMessages: GetChatMessages,
     private val addChatMessage: AddChatMessage,
@@ -56,7 +59,7 @@ class ChatViewModel @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
         chatJob = launch {
-            getChatMessages().consumeEach {
+            getChatMessages().collect {
                 KLogger.d {
                     "get messages, on resume, size: ${it.size}"
                 }
@@ -82,13 +85,13 @@ class ChatViewModel @Inject constructor(
                         username,
                         ChatMessage.MESSAGE,
                         reply.value.toString(),
-                        DateTime.nowUnixLong()
+                        Clock.System.now().toEpochMilliseconds()
                     )
                 )
 
                 reply.value = ""
 
-                getChatMessages().receiveAsFlow().collect {
+                getChatMessages().collect {
                     KLogger.d {
                         "get messages, reply clicked, size: ${it.size}"
                     }

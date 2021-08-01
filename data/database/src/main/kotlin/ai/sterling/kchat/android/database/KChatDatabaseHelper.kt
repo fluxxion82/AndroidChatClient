@@ -1,16 +1,18 @@
 package ai.sterling.kchat.android.database
 
-import ai.sterling.kchat.android.database.dao.ChatMessageDao
 import ai.sterling.kchat.android.database.dao.AppUserDao
+import ai.sterling.kchat.android.database.dao.ChatMessageDao
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.annotation.CallSuper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Singleton
+import javax.inject.Inject
 
-@Singleton
-class KChatDatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class KChatDatabaseHelper @Inject constructor(
+    @ApplicationContext val context: Context
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     private var database: SQLiteDatabase? = null
     private var openCounter = AtomicInteger()
 

@@ -1,14 +1,13 @@
 package ai.sterling.kchat.android.database.storage
 
 import ai.sterling.kchat.android.database.DatabaseManager
-import ai.sterling.kchat.android.database.dao.ChatMessageDao
 import ai.sterling.kchat.domain.base.CoroutinesContextFacade
 import ai.sterling.kchat.domain.chat.model.ChatMessage
 import ai.sterling.kchat.domain.chat.persistence.ChatDao
 import ai.sterling.kchat.domain.chat.persistence.ChatStorage
-import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class ChatMessageStorage @Inject constructor(
     private val databaseManager: DatabaseManager,

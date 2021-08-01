@@ -4,12 +4,12 @@ import ai.sterling.kchat.android.database.DatabaseManager
 import ai.sterling.kchat.domain.user.LoginUser
 import ai.sterling.kchat.domain.user.models.AppUser
 import ai.sterling.kchat.domain.user.persistences.UserDao
-import ai.sterling.logger.KLogger
+import ai.sterling.logging.KLogger
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import com.soywiz.klock.DateTime
+import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 class AppUserDao @Inject constructor(
@@ -61,7 +61,7 @@ class AppUserDao @Inject constructor(
                 values.put(Table.COLUMN_USERNAME, user.username)
             }
 
-            values.put(Table.COLUMN_CREATED_AT, DateTime.now().unixMillisLong)
+            values.put(Table.COLUMN_CREATED_AT, Clock.System.now().toEpochMilliseconds())
 
             try {
                 userRow = database.insertWithOnConflict(
