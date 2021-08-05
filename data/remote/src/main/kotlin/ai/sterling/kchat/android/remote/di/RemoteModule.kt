@@ -3,7 +3,7 @@ package ai.sterling.kchat.android.remote.di
 import ai.sterling.kchat.android.remote.repositories.RemoteChatMessageRepository
 import ai.sterling.kchat.android.remote.repositories.RemoteConversationRepository
 import ai.sterling.kchat.android.remote.repositories.RemoteUserRepository
-import ai.sterling.kchat.domain.chat.repository.ChatRespository
+import ai.sterling.kchat.domain.chat.repository.ChatRepository
 import ai.sterling.kchat.domain.chat.repository.ConversationRepository
 import ai.sterling.kchat.domain.user.persistences.UserRepository
 import dagger.Binds
@@ -21,7 +21,7 @@ abstract class RemoteModule {
     internal abstract fun conversationRepository(implementation: RemoteConversationRepository): ConversationRepository
 
     @Binds
-    internal abstract fun chatRepository(implementation: RemoteChatMessageRepository): ChatRespository
+    internal abstract fun chatRepository(implementation: RemoteChatMessageRepository): ChatRepository
 
     @Binds
     internal abstract fun userRepository(implementation: RemoteUserRepository): UserRepository

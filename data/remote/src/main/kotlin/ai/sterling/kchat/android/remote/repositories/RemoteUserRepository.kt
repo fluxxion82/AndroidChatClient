@@ -3,6 +3,7 @@ package ai.sterling.kchat.android.remote.repositories
 import ai.sterling.kchat.android.api.KChatApiClient
 import ai.sterling.kchat.domain.base.CoroutinesContextFacade
 import ai.sterling.kchat.domain.base.model.Outcome
+import ai.sterling.kchat.domain.exception.Failure
 import ai.sterling.kchat.domain.user.LoginUser
 import ai.sterling.kchat.domain.user.SignUpUser
 import ai.sterling.kchat.domain.user.models.AppUser
@@ -11,10 +12,7 @@ import ai.sterling.kchat.domain.user.persistences.UserPreferences
 import ai.sterling.kchat.domain.user.persistences.UserRepository
 import ai.sterling.kchat.domain.user.persistences.UserStorage
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -25,29 +23,31 @@ class RemoteUserRepository @Inject constructor(
     private val contextFacade: CoroutinesContextFacade
 ): UserRepository {
 
-    override fun login(param: LoginUser.LoginData): Flow<AppUser> = channelFlow {
-        apiClient.connect().collect { outcome ->
-            when (outcome) {
+    override suspend fun login(param: LoginUser.LoginData): Outcome<AppUser> = coroutineScope {
+        withContext(contextFacade.io) {
+            when (val outcome = apiClient.connect()) {
                 is Outcome.Success -> {
+                    println("connect success")
                     userStorage.insertUser(param)
-                    send(userStorage.getUser(param.username)!!)
+                    Outcome.Success(userStorage.getUser(param.username)!!)
                 }
                 is Outcome.Error -> {
                     when (outcome.cause) {
                         else -> {
                             disconnect()
-                            send(AppUser.Anonymous)
+                            Outcome.Error("", Failure.ServerError(300))
                         }
                     }
                 }
             }
         }
+    }
 
-    }.flowOn(contextFacade.io)
-
-    override fun signup(param: SignUpUser.SignUpnData): Flow<AppUser> = channelFlow {
-        send(userStorage.getUser(param.username)!!)
-    }.flowOn(contextFacade.io)
+    override suspend fun signup(param: SignUpUser.SignUpnData): Outcome<AppUser> = coroutineScope {
+        withContext(contextFacade.io) {
+            Outcome.Success(userStorage.getUser(param.username)!!)
+        }
+    }
 
     override suspend fun disconnect() = coroutineScope {
         withContext(contextFacade.io) {
@@ -55,29 +55,41 @@ class RemoteUserRepository @Inject constructor(
         }
     }
 
-    override fun getUser(id: Long): Flow<AppUser> = channelFlow {
-        send(userStorage.getUser(id)!!)
-    }.flowOn(contextFacade.io)
+    override suspend fun getUser(id: Long): Outcome<AppUser> = coroutineScope {
+        withContext(contextFacade.io) {
+            Outcome.Success(userStorage.getUser(id)!!)
+        }
+    }
 
-    override fun getUser(username: String): Flow<AppUser> = channelFlow {
-        send(userStorage.getUser(username)!!)
-    }.flowOn(contextFacade.io)
+    override suspend fun getUser(username: String): Outcome<AppUser> = coroutineScope {
+        withContext(contextFacade.io) {
+            Outcome.Success(userStorage.getUser(username)!!)
+        }
+    }
 
-    override fun getUserProfile(): Flow<ProfileDetails> = channelFlow {
-        val user = userStorage.getUser(userPreferences.getServerInfo().username)!!
-        send(ProfileDetails(
-            user.username
-        ))
-    }.flowOn(contextFacade.io)
+    override suspend fun getUserProfile(): Outcome<ProfileDetails> = coroutineScope {
+        withContext(contextFacade.io) {
+            val user = userStorage.getUser(userPreferences.getServerInfo().username)!!
+            Outcome.Success(
+                ProfileDetails(
+                    user.username
+                )
+            )
+        }
+    }
 
     override suspend fun updateProfileDetails(updated: ProfileDetails) = coroutineScope {
         withContext(contextFacade.io) {
-            getUser(userPreferences.getServerInfo().username).collect {
-                when (it) {
-                    is AppUser.LoggedIn -> userStorage.updateUser(it)
-                    else -> Unit
+            when (val outcome = getUser(userPreferences.getServerInfo().username)) {
+                is Outcome.Success -> {
+                    when (val appUser = outcome.value) {
+                        is AppUser.LoggedIn -> userStorage.updateUser(appUser)
+                        else -> Unit
+                    }
                 }
+                is Outcome.Error -> Unit
             }
+            Unit
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +22,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Preview(name = "Main content")
 @Composable

@@ -5,7 +5,7 @@ import ai.sterling.kchat.android.platform.repositories.LocalConversationReposito
 import ai.sterling.kchat.android.platform.repositories.SharedUserPreferencesRepository
 import ai.sterling.kchat.android.platform.service.ActivityProvider
 import ai.sterling.kchat.domain.chat.repository.ConversationRepository
-import ai.sterling.kchat.domain.connectivity.ConnectionMonitor
+import ai.sterling.kchat.domain.connectivity.persistence.ConnectionMonitor
 import ai.sterling.kchat.domain.initialization.AppInitializer
 import ai.sterling.kchat.domain.user.persistences.UserPreferences
 import dagger.Binds

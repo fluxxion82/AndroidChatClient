@@ -2,22 +2,18 @@ package ai.sterling.kchat.android.api
 
 import ai.sterling.kchat.domain.base.CoroutineScopeFacade
 import ai.sterling.kchat.domain.base.model.Outcome
-import ai.sterling.kchat.domain.chat.exception.ChatMessageFailure
+import ai.sterling.kchat.domain.chat.exception.ChatFailure
+import ai.sterling.kchat.domain.chat.model.ChatEvent
 import ai.sterling.kchat.domain.chat.model.ChatMessage
+import ai.sterling.kchat.domain.chat.persistence.ChatEventPersistence
 import ai.sterling.kchat.domain.exception.Failure
 import ai.sterling.kchat.domain.settings.models.ServerInfo
 import ai.sterling.kchat.domain.user.persistences.UserPreferences
 import ai.sterling.logging.KLogger
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
@@ -35,6 +31,7 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class KChatApiClient @Inject constructor(
+    private val chatEventPersistence: ChatEventPersistence,
     private val userPreferences: UserPreferences,
     private val contextScopeFacade: CoroutineScopeFacade
 ) {
@@ -45,47 +42,46 @@ class KChatApiClient @Inject constructor(
     private var isConnected = false
     var webSocket: WebSocket? = null
 
-    private val broadcastChannel = ConflatedBroadcastChannel<ChatMessage>()
+//    init {
+//        contextScopeFacade.globalScope.launch {
+//            while (!isConnected) {
+//                connectToServer().collect { outcome ->
+//                    when(outcome) {
+//                        is Outcome.Success -> {
+//                            isConnected = true
+//                        }
+//                        is Outcome.Error -> {
+//                            KLogger.e {
+//                                "error, ${outcome.message}"
+//                            }
+//                            when(outcome.cause) {
+//                                else -> {
+//                                    disconnect()
+//                                    delay(5000)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    init {
-        contextScopeFacade.globalScope.launch {
-            while (!isConnected) {
-                connectToServer().collect { outcome ->
-                    when(outcome) {
-                        is Outcome.Success -> {
-                            isConnected = true
-                        }
-                        is Outcome.Error -> {
-                            KLogger.e {
-                                "error, ${outcome.message}"
-                            }
-                            when(outcome.cause) {
-                                else -> {
-                                    disconnect()
-                                    delay(1000)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    fun isConnected() = isConnected
 
-    suspend fun connect(): Flow<Outcome<Boolean>> {
-        val channel = BroadcastChannel<Outcome<Boolean>>(1)
+    suspend fun connect(): Outcome<Boolean> {
+        var result: Outcome<Boolean> = Outcome.Error("", Failure.ServerError(500))
         serverInfo = userPreferences.getServerInfo()
         if (!serverInfo?.serverIP.isNullOrEmpty() && !serverInfo?.username.isNullOrEmpty()) {
             try {
                 val okHttpClient = OkHttpClient.Builder().build()
-                val request: Request = Request.Builder().url("ws://${serverInfo!!.serverIP}:${serverInfo!!.serverPort}/").build()
+                val request: Request = Request.Builder().url("ws://${serverInfo?.serverIP}:${serverInfo?.serverPort}/").build()
                 //val listener = WSocketListener(serverInfo!!.username)
                 webSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
                     override fun onOpen(webSocket: WebSocket, response: Response) {
-                        KLogger.d {
-                            "WebSocket connected"
-                        }
+                        KLogger.d { "WebSocket connected" }
 
+                        isConnected = true
                         val msg =
                             ChatMessage(
                                 0,
@@ -96,16 +92,15 @@ class KChatApiClient @Inject constructor(
                             )
 
                         webSocket.send(Gson().toJson(arrayListOf(msg)).toString())
+                        KLogger.d { "send connect event" }
                         contextScopeFacade.globalScope.launch {
-                            channel.send(Outcome.Success(true))
+                            chatEventPersistence.update(ChatEvent.Connect)
                         }
                     }
 
                     override fun onMessage(webSocket: WebSocket, text: String) {
                         contextScopeFacade.globalScope.launch {
-                            KLogger.d {
-                                "socket message: $text"
-                            }
+                            KLogger.d { "socket message: $text" }
                             var msg = Gson().fromJson(text, ChatMessage::class.java)
                             if (msg.type == ChatMessage.LOGIN) {
                                 msg = msg.copy(message = "${msg.username} just joined")
@@ -113,7 +108,7 @@ class KChatApiClient @Inject constructor(
                                 msg = msg.copy(message = "${msg.username} logged out")
                             }
 
-                            broadcastChannel.send(msg)
+                            chatEventPersistence.update(ChatEvent.MessageReceived(msg))
                         }
                     }
 
@@ -122,32 +117,27 @@ class KChatApiClient @Inject constructor(
                     }
 
                     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                        contextScopeFacade.globalScope.launch {
-                            disconnect()
-                            KLogger.d {
-                                "Closed: $code / $reason"
-                            }
-                        }
+                        KLogger.d { "Closed: $code / $reason" }
+                        disconnect()
                     }
 
                     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                        KLogger.d {
-                            "Error: ${t.message}"
-                        }
+                        KLogger.d { "Error: ${t.message}" }
                         contextScopeFacade.globalScope.launch {
-                            channel.send(Outcome.Error(t.message ?: "failed to connect", Failure.NetworkConnection()))
+                            chatEventPersistence.update(ChatEvent.Error("Error: ${t.message}"))
                         }
                     }
                 })
                 //okHttpClient.dispatcher.executorService.shutdown()
+                result = Outcome.Success(true)
             } catch (exception: IOException) {
-                println("Faild to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}")
+                KLogger.e(exception) { "Failed to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}" }
                 disconnect()
-                channel.send(Outcome.Error(exception.message ?: "failed to write out messages", Failure.NetworkConnection()))
+                result = Outcome.Error("", ChatFailure.FailedToConnect(""))
             }
         }
 
-        return channel.openSubscription().consumeAsFlow()
+        return result
     }
 
     suspend fun connectToServer(): Flow<Outcome<Boolean>> = channelFlow {
@@ -183,17 +173,18 @@ class KChatApiClient @Inject constructor(
                     send(Outcome.Success(false))
                 }
             } catch (exception: UnknownHostException) {
-                println("Faild to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}")
-                send(Outcome.Error(exception.message ?: "failed to write out messages", Failure.NetworkConnection()))
+                KLogger.e(exception) { "Failed to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}" }
+                send(Outcome.Error(exception.message ?: "failed to connect", Failure.NetworkConnection()))
             } catch (exception: IOException) {
-                println("Faild to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}")
-                send(Outcome.Error(exception.message ?: "failed to write out messages", Failure.NetworkConnection()))
+                KLogger.e(exception) { "Failed to connect server ${serverInfo?.serverIP} on port ${serverInfo?.serverPort}" }
+                send(Outcome.Error(exception.message ?: "failed to connect", Failure.NetworkConnection()))
             }
         }
     }
 
     suspend fun sendChatMessage(messageList: List<ChatMessage>): Flow<Outcome<Boolean>> = channelFlow {
         if (!isConnected) {
+            KLogger.i { "not connected" }
             send(Outcome.Error("socket not available", Failure.NetworkConnection()))
         } else if (messageList.isNotEmpty()) {
             KLogger.d {
@@ -212,66 +203,39 @@ class KChatApiClient @Inject constructor(
 
                 //printWriter?.write(messageBuilder.toString())
                 //printWriter?.flush()
+                contextScopeFacade.globalScope.launch {
+                    messageList.forEach {
+                        KLogger.d { "sent  message, type: ${it.type} : $it" }
+                        chatEventPersistence.update(ChatEvent.MessageSent(it))
+                    }
+                }
                 send(Outcome.Success(true))
             } catch (exception: Exception) {
-                send(Outcome.Error(exception.message ?: "failed to write out messages", ChatMessageFailure.SendChatMessageFailure()))
+                send(Outcome.Error(exception.message ?: "failed to write out messages", ChatFailure.SendChatMessageFailure))
             }
         }
     }
 
-    fun receive(): ReceiveChannel<ChatMessage> = broadcastChannel.openSubscription()
-//        contextScopeFacade.globalScope.produce<ChatMessage> {
-//        while (isConnected) {
-//            try {
-//                if (bufferedReader?.ready() == true) {
-//                    val message = bufferedReader?.readLine()
-//                    KLogger.d {
-//                        "receiving messages:, $message"
-//                    }
-//                    var msg = Gson().fromJson(message, ChatMessage::class.java)
-//                    if (msg.type == ChatMessage.LOGIN) {
-//                        msg  = msg.copy(message = "${msg.username} just joined")
-//                    } else if (msg.type == ChatMessage.LOGOUT) {
-//                        msg = msg.copy(message = "${msg.username} logged out")
-//                    }
-//                    send(msg)
-//                }
-//            } catch (e: UnknownHostException) {
-//                e.printStackTrace()
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            } catch (exception: JsonSyntaxException) {
-//                exception.printStackTrace()
-//            }
-//            delay(500)
-//        }
-//    }
-
-    suspend fun disconnect() {
-        KLogger.d {
-            "disconnect"
+    fun disconnect() {
+        KLogger.d { "disconnect" }
+        if (!isConnected) {
+            return
         }
+
         try {
-            //if (printWriter != null) {
-                // Send logout message
-                val msg = ChatMessage(
-                    0,
-                    serverInfo!!.username,
-                    ChatMessage.LOGOUT,
-                    "",
-                    Clock.System.now().toEpochMilliseconds()
-                )
-                KLogger.d {
-                    "loggggout"
-                }
-                webSocket?.send(Gson().toJson(arrayListOf(msg)).toString())
-//                printWriter?.write(Gson().toJson(msg).toString() + "\n")//automatic flushing is enabled on PrintWriter
-//                printWriter?.flush()
-//
-//                printWriter?.close()
-            //}
-        } catch (e: java.lang.Exception) {
-            //not much else to do
+            // Send logout message
+            val msg = ChatMessage(
+                0,
+                serverInfo!!.username,
+                ChatMessage.LOGOUT,
+                "",
+                Clock.System.now().toEpochMilliseconds()
+            )
+            KLogger.d {
+                "log out"
+            }
+            webSocket?.send(Gson().toJson(arrayListOf(msg)).toString())
+        } catch (e: Exception) {
             KLogger.e(e) {
                 "exception, ${e.message}"
             }
@@ -279,17 +243,16 @@ class KChatApiClient @Inject constructor(
 
         try {
             webSocket?.close(10000, null)
-            //socket?.close()
-        } catch (e: java.lang.Exception) {
-            //not much else to do
-        }
-
-        try {
-            //bufferedReader?.close()
-        } catch (e: java.lang.Exception) {
-            //not much else to do
+        } catch (e: Exception) {
+            KLogger.e(e) {
+                "exception, ${e.message}"
+            }
         }
 
         isConnected = false
+
+        contextScopeFacade.globalScope.launch {
+            chatEventPersistence.update(ChatEvent.Disconnect)
+        }
     }
 }

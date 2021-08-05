@@ -15,6 +15,11 @@ import ai.sterling.kchat.domain.base.model.Outcome
 import ai.sterling.logging.KLogger
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,10 +30,12 @@ class SettingsViewModel @Inject constructor(
     private val updateServerInfo: UpdateServerInfo,
     private val loginUser: LoginUser
 ) : BaseViewModel() {
-    val username = MutableStateFlow<String>("")
-    val serverAddress = MutableStateFlow<String>("10.0.0.62")
-    val serverPort = MutableStateFlow<String>("")
+    val username = MutableStateFlow("")
+    val serverAddress = MutableStateFlow("10.0.0.62")
+    val serverPort = MutableStateFlow("4444")
 
+//    private val channel = BroadcastChannel<Event<ServerInfoNavigation>>(1)
+//    val navigation: Flow<Event<ServerInfoNavigation>?> = channel.openSubscription().consumeAsFlow()
     val navigation = MutableLiveData<Event<ServerInfoNavigation>?>()
     val error: MutableStateFlow<Outcome.Error?> = MutableStateFlow(null)
 
@@ -42,25 +49,25 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun finishClicked() {
-        if (!username.value.isNullOrEmpty()) {
-            KLogger.d {
-                "username is ${username.value}"
-            }
-            val serverInfo = ServerInfo(username.value!!, serverAddress.value!!, serverPort.value!!.toInt())
+    fun finishClicked(uName: String, address: String, port: String) {
+        KLogger.d { "on finished clicked" }
+        if (!uName.isNullOrEmpty()) {
+            KLogger.d { "username is $uName" }
+            val serverInfo = ServerInfo(uName, address, port.toInt())
             launch {
-                updateServerInfo(serverInfo)
-            }
-            launch {
-                val loginState = loginUser(LoginUser.LoginData(username.value!!))
-                if (loginState == UserState.LoggedIn) {
-                    navigation.value = ServerInfoNavigation.UpdateSucceeded.toEvent()
+                val result = updateServerInfo(serverInfo)
+                if (result) {
+                    val loginState = loginUser(LoginUser.LoginData(uName))
+                    if (loginState == UserState.LoggedIn) {
+                        KLogger.w { "logged in" }
+                        // channel.send(ServerInfoNavigation.UpdateSucceeded.toEvent())
+                        navigation.value = ServerInfoNavigation.UpdateSucceeded.toEvent()
+                    }
                 }
             }
         } else {
-            KLogger.d {
-                "username is null or empty"
-            }
+            KLogger.d { "username is null or empty" }
+            // launch { channel.send(ServerInfoNavigation.UpdateError.toEvent()) }
             navigation.value = ServerInfoNavigation.UpdateError.toEvent()
         }
     }

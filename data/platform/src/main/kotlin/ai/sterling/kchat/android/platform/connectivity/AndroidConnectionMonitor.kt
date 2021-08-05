@@ -1,8 +1,8 @@
 package ai.sterling.kchat.android.platform.connectivity
 
 import ai.sterling.kchat.domain.base.CoroutineScopeFacade
-import ai.sterling.kchat.domain.connectivity.ConnectionMonitor
-import ai.sterling.kchat.domain.connectivity.ConnectionState
+import ai.sterling.kchat.domain.connectivity.persistence.ConnectionMonitor
+import ai.sterling.kchat.domain.connectivity.model.ConnectionState
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network

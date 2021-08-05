@@ -10,5 +10,6 @@
     <string name="server_address_hint">Server IP</string>
     <string name="server_port_hint">Server Port</string>
 
+    <string name="send">Send</string>
     <string name="finish">Finish</string>
 </resources>
