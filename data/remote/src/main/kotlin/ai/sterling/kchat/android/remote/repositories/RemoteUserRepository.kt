@@ -29,7 +29,7 @@ class RemoteUserRepository @Inject constructor(
                 is Outcome.Success -> {
                     println("connect success")
                     userStorage.insertUser(param)
-                    Outcome.Success(userStorage.getUser(param.username)!!)
+                    Outcome.Success(userStorage.getUser(param.username!!)!!)
                 }
                 is Outcome.Error -> {
                     when (outcome.cause) {
@@ -69,7 +69,7 @@ class RemoteUserRepository @Inject constructor(
 
     override suspend fun getUserProfile(): Outcome<ProfileDetails> = coroutineScope {
         withContext(contextFacade.io) {
-            val user = userStorage.getUser(userPreferences.getServerInfo().username)!!
+            val user = userStorage.getUser(userPreferences.getServerInfo().username!!)!!
             Outcome.Success(
                 ProfileDetails(
                     user.username
@@ -80,7 +80,7 @@ class RemoteUserRepository @Inject constructor(
 
     override suspend fun updateProfileDetails(updated: ProfileDetails) = coroutineScope {
         withContext(contextFacade.io) {
-            when (val outcome = getUser(userPreferences.getServerInfo().username)) {
+            when (val outcome = getUser(userPreferences.getServerInfo().username!!)) {
                 is Outcome.Success -> {
                     when (val appUser = outcome.value) {
                         is AppUser.LoggedIn -> userStorage.updateUser(appUser)

@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "ai.sterling.kchat.android"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -29,10 +29,6 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/*.kotlin_module'
-    }
-    composeOptions {
-        //kotlinCompilerExtensionVersion = composeVersion
-        kotlinCompilerVersion = "1.5.10"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -62,7 +58,6 @@ dependencies {
     implementation project(':logging:platformlogger')
     implementation project(':presentation:chat')
 
-    compileOnly "androidx.compose.compiler:compiler:$composeVersion"
     compileOnly 'com.google.code.gson:gson:2.8.7'
     compileOnly 'com.google.android.material:material:1.4.0'
     compileOnly 'androidx.navigation:navigation-fragment-ktx:2.3.5'

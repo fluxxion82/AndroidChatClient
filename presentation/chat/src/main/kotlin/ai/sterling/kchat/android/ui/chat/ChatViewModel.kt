@@ -50,7 +50,7 @@ class ChatViewModel @Inject constructor(
         launch {
             getServerInfo().collect {
                 serverInfo = it
-                username = it.username
+                username = it.username.orEmpty()
             }
         }
         launch {

@@ -85,7 +85,7 @@ class KChatApiClient @Inject constructor(
                         val msg =
                             ChatMessage(
                                 0,
-                                serverInfo!!.username,
+                                serverInfo!!.username!!,
                                 ChatMessage.LOGIN,
                                 "",
                                 Clock.System.now().toEpochMilliseconds()
@@ -144,7 +144,7 @@ class KChatApiClient @Inject constructor(
         serverInfo = userPreferences.getServerInfo()
         if (!serverInfo?.serverIP.isNullOrEmpty() && !serverInfo?.username.isNullOrEmpty()) {
             try {
-                socket = Socket(serverInfo?.serverIP, serverInfo!!.serverPort) // Creating the server socket.
+                socket = Socket(serverInfo?.serverIP, serverInfo!!.serverPort!!) // Creating the server socket.
                 if (socket != null) {
                     isConnected = true
                     printWriter = PrintWriter(socket!!.getOutputStream(), true)
@@ -159,7 +159,7 @@ class KChatApiClient @Inject constructor(
                     val msg =
                         ChatMessage(
                             0,
-                            serverInfo!!.username,
+                            serverInfo!!.username!!,
                             ChatMessage.LOGIN,
                             "",
                             Clock.System.now().toEpochMilliseconds()
@@ -226,7 +226,7 @@ class KChatApiClient @Inject constructor(
             // Send logout message
             val msg = ChatMessage(
                 0,
-                serverInfo!!.username,
+                serverInfo!!.username!!,
                 ChatMessage.LOGOUT,
                 "",
                 Clock.System.now().toEpochMilliseconds()

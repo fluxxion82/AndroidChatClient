@@ -1,7 +1,3 @@
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
 apply plugin: 'chat-lib.android'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'dagger.hilt.android.plugin'
@@ -63,14 +59,14 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
     implementation "androidx.compose.ui:ui-util:$composeVersion"
-    implementation "androidx.activity:activity-compose:1.3.0"
+    implementation "androidx.activity:activity-compose:1.3.1"
     implementation "androidx.compose.material:material:$composeVersion"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
     implementation "androidx.compose.compiler:compiler:$composeVersion"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha05"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha07"
 
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'

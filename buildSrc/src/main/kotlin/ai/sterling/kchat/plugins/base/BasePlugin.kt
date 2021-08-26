@@ -51,8 +51,8 @@ open class BasePlugin : Plugin<Project> {
     }
 
     companion object {
-        private const val kotlinVersion = "1.5.20"
-        private const val daggerVersion = "2.37"
+        private const val kotlinVersion = "1.5.21"
+        private const val daggerVersion = "2.38.1"
         private const val coroutinesVersion = "1.5.0"
     }
 }

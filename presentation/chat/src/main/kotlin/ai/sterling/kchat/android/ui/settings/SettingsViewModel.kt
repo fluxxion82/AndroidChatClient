@@ -43,15 +43,15 @@ class SettingsViewModel @Inject constructor(
         launch {
             val serverInfo = getServerInfo().single()
 
-            username.value = serverInfo.username
-            serverAddress.value = serverInfo.serverIP
+            username.value = serverInfo.username.orEmpty()
+            serverAddress.value = serverInfo.serverIP.orEmpty()
             serverPort.value = serverInfo.serverPort.toString()
         }
     }
 
     fun finishClicked(uName: String, address: String, port: String) {
         KLogger.d { "on finished clicked" }
-        if (!uName.isNullOrEmpty()) {
+        if (!uName.isEmpty()) {
             KLogger.d { "username is $uName" }
             val serverInfo = ServerInfo(uName, address, port.toInt())
             launch {
